@@ -24,17 +24,22 @@ const pool = new pg.Pool({
   password: process.env.DB_PASSWORD,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  database: "exam-zoo-website-db",
+  database: process.env.DB_NAME,
 });
 
 // Whether or not the database has been connected to successfully
-pool.connect((err) => {
-  if (err) {
-    console.error("Error connecting to database: " + err.stack);
-    return;
-  }
-  console.log("Connected to database");
+pool.connect((err, client, done) => {
+  if (err) throw err;
+  client.query('SELECT * FROM your_table', (err, res) => {
+    done();
+    if (err) {
+      console.log(err.stack);
+    } else {
+      console.log(res.rows);
+    }
+  });
 });
+
 
 // Server Running on Port
 const port = 5000;
