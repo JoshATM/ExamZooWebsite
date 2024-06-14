@@ -4,26 +4,28 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import pg from "pg";
 
-// Initialize Express app
+// Front-end Server Port
+const frontend = "http://localhost:5173";
+
 const app = express();
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: process.env.VITE_FRONTEND_URL || "http://localhost:5173",
+    origin: frontend,
     credentials: true,
   })
 );
 
 // Database Connection
 const pool = new pg.Pool({
-  user: process.env.VITE_DB_USER,
-  password: process.env.VITE_DB_PASSWORD,
-  host: process.env.VITE_DB_HOST,
-  port: process.env.VITE_DB_PORT,
-  database: process.env.VITE_DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
 });
 
-// Check database connection
+// Whether or not the database has been connected to successfully
 pool.connect((err, client, done) => {
   if (err) throw err;
   client.query("SELECT * FROM your_table", (err, res) => {
@@ -34,6 +36,12 @@ pool.connect((err, client, done) => {
       console.log(res.rows);
     }
   });
+});
+
+// Server Running on Port
+const port = 5000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
 // Table for Users
@@ -106,7 +114,9 @@ app.get("/check-email/:email", (req, res) => {
   });
 });
 
-// Fetch users
+// Incomplete Dashboard
+
+// Would get the users name and email if finished
 app.get("/users", (req, res) => {
   const query = "SELECT * FROM users";
   pool.query(query, (err, results) => {
@@ -120,7 +130,7 @@ app.get("/users", (req, res) => {
   });
 });
 
-// Fetch reservations
+// Would get the users reservations if finished
 app.get("/reservations", (req, res) => {
   const query = "SELECT * FROM hotel_reservations";
   pool.query(query, (err, results) => {
@@ -134,7 +144,7 @@ app.get("/reservations", (req, res) => {
   });
 });
 
-// Fetch bookings
+// Would get the users bookings if finished
 app.get("/bookings", (req, res) => {
   const query = "SELECT * FROM bookings";
   pool.query(query, (err, results) => {
@@ -148,7 +158,7 @@ app.get("/bookings", (req, res) => {
   });
 });
 
-// Create tables for bookings and reservations
+// Creates a Table for Bookings
 const ticketBookingsTable = `
 CREATE TABLE IF NOT EXISTS ticket_bookings (
   id SERIAL PRIMARY KEY,
@@ -167,6 +177,7 @@ pool.query(ticketBookingsTable, (err) => {
   console.log("TicketBookings table created");
 });
 
+// Creates a Table for Reservations
 const hotelBookingsTable = `
 CREATE TABLE IF NOT EXISTS hotel_bookings (
   id SERIAL PRIMARY KEY,
@@ -182,5 +193,3 @@ pool.query(hotelBookingsTable, (err) => {
   if (err) throw err;
   console.log("HotelBookings table created");
 });
-
-export default app;

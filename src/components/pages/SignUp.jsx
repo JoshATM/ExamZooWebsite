@@ -4,6 +4,7 @@ import WomanWithGoats from "../../assets/images/WomanWithGoats.jpg";
 import styled from "styled-components";
 import Line from "../Line";
 import { useNavigate } from "react-router-dom";
+
 import toast from "react-hot-toast";
 
 export default function SignUp() {
@@ -14,8 +15,6 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
-
-  const API_URL = import.meta.env.API_URL;
 
   // Signs the User up and adds it to the database
   const Submit = async (e) => {
@@ -33,7 +32,7 @@ export default function SignUp() {
       try {
         // Email validation to check if it already exists
         const emailAlreadyExists = await fetch(
-          `${API_URL}/check-email/${email}`,
+          `http://localhost:5000/check-email/${email}`,
           {
             method: "GET",
             headers: {
@@ -47,7 +46,7 @@ export default function SignUp() {
         if (ifEmailExists) {
           toast.error("This email is already in use. \n You can Log in Below.");
         } else {
-          const response = await fetch(`${API_URL}/register`, {
+          const response = await fetch("http://localhost:5000/register", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -179,7 +178,7 @@ const StyledInput = styled.input`
 
 const StyledButton = styled.button`
   color: white;
-  font-family: "Playpen Sans", cursive;
+  font-family: "Playpen Sans", cursive; // Had to declare again as button had no font-family assigned but was still overiding the body (!important also doesn't work)
   border-radius: 12.5px;
   border: none;
   background: #1a8940;
