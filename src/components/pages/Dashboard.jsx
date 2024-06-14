@@ -1,6 +1,6 @@
 // Importing Modules
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 
 export default function Dashboard() {
   const [user, setUser] = useState(null);
@@ -8,47 +8,48 @@ export default function Dashboard() {
   const [hotelReservations, setHotelReservations] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/user')
-      .then(response => {
+    fetch("http://localhost:5000/user")
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+          throw new Error("Failed to fetch user data");
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         setUser(data);
       })
-      .catch(error => {
-        console.error('Error fetching user data:', error);
-      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
 
-    fetch('http://localhost:5000/bookings')
-      .then(response => {
+    fetch("http://localhost:5000/bookings")
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch bookings');
+          throw new Error("Failed to fetch bookings");
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         setBookings(data);
       })
-      .catch(error => {
-        console.error('Error fetching bookings:', error);
-      })
+      .catch((error) => {
+        console.error("Error fetching bookings:", error);
+      });
 
-    fetch('http://localhost:5000/reservations')
-      .then(response => {
+    fetch("http://localhost:5000/reservations")
+      .then((response) => {
         if (!response.ok) {
-          throw new Error('Failed to fetch hotel reservations');
+          throw new Error("Failed to fetch hotel reservations");
         }
         return response.json();
       })
-      .then(data => {
+      .then((data) => {
         setHotelReservations(data);
       })
-      .catch(error => {
-        console.error('Error fetching hotel reservations:', error);
-      })}, [])
+      .catch((error) => {
+        console.error("Error fetching hotel reservations:", error);
+      });
+  }, []);
 
   return (
     <>
@@ -57,7 +58,9 @@ export default function Dashboard() {
           <Header>User:</Header>
           {user && (
             <>
-              <p>Name: {user.firstname} {user.lastname}</p>
+              <p>
+                Name: {user.firstname} {user.lastname}
+              </p>
               <p>Email: {user.email}</p>
             </>
           )}
@@ -69,11 +72,18 @@ export default function Dashboard() {
             <>
               {bookings.map((booking, index) => (
                 <div key={index}>
-                  <p>{booking.ticketType} Tickets: {booking.quantity}</p>
-                  <p>{booking.ticketType} Ticket Price: £{booking.price}</p>
+                  <p>
+                    {booking.ticketType} Tickets: {booking.quantity}
+                  </p>
+                  <p>
+                    {booking.ticketType} Ticket Price: £{booking.price}
+                  </p>
                 </div>
               ))}
-              <p>Total Price: £{bookings.reduce((acc, curr) => acc + curr.price, 0)}</p>
+              <p>
+                Total Price: £
+                {bookings.reduce((acc, curr) => acc + curr.price, 0)}
+              </p>
             </>
           )}
         </Card>
@@ -93,7 +103,6 @@ export default function Dashboard() {
   );
 }
 
-
 // Styles
 const CardContainer = styled.div`
   display: flex;
@@ -101,7 +110,7 @@ const CardContainer = styled.div`
   gap: 40px;
   align-content: center;
   flex-wrap: wrap;
-`
+`;
 
 const Card = styled.div`
   display: flex;
@@ -111,9 +120,8 @@ const Card = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-`
-
+`;
 
 const Header = styled.h1`
   font-size: 25px;
-`
+`;

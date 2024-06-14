@@ -1,33 +1,33 @@
 // Importing Modules
-import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export default function CookieConsent() {
   const navigate = useNavigate();
 
   const [ccshow, setCCShow] = useState(() => {
-    return localStorage.getItem('cookies') !== 'false';
+    return localStorage.getItem("cookies") !== "false";
   });
 
   useEffect(() => {
-    if (localStorage.getItem('cookies')) {
+    if (localStorage.getItem("cookies")) {
       setCCShow(false);
     }
   }, []);
 
   const Declined = () => {
-    localStorage.setItem('cookies', false);
+    localStorage.setItem("cookies", false);
     setCCShow(false);
   };
 
   const Agreed = () => {
-    localStorage.setItem('cookies', true);
+    localStorage.setItem("cookies", true);
     setCCShow(false);
   };
 
   return (
-    <div className={ccshow ? 'open' : ''}>
+    <div className={ccshow ? "open" : ""}>
       {ccshow && (
         <>
           <Background />
@@ -35,12 +35,9 @@ export default function CookieConsent() {
             <Header>We use cookies</Header>
             <TextDiv>
               <Text>
-                This website uses cookies to improve the experience of the
-                user. To view our cookie policy, please view them{' '}
-                <Link onClick={() => navigate('/cookie-policy')}>
-                  here
-                </Link>
-                .
+                This website uses cookies to improve the experience of the user.
+                To view our cookie policy, please view them{" "}
+                <Link onClick={() => navigate("/cookie-policy")}>here</Link>.
               </Text>
             </TextDiv>
             <ButtonDiv>
@@ -51,7 +48,7 @@ export default function CookieConsent() {
         </>
       )}
     </div>
-  )
+  );
 }
 
 // Styles
@@ -64,7 +61,7 @@ const Background = styled.div`
   background: black;
   z-index: 10;
   opacity: 0.5;
-`
+`;
 
 const Container = styled.div`
   width: 500px;
@@ -83,13 +80,13 @@ const Container = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
 
-  @media(max-width: 750px){
+  @media (max-width: 750px) {
     width: 250px;
     height: 500px;
     font-size: 20px;
     display: block;
   }
-`
+`;
 
 const Header = styled.h1``;
 
@@ -99,7 +96,7 @@ const Link = styled.a`
   cursor: pointer;
   text-decoration: underline;
   color: orange;
-`
+`;
 
 const TextDiv = styled.div``;
 
@@ -108,10 +105,10 @@ const ButtonDiv = styled.div`
   flex-wrap: wrap;
   justify-content: space-evenly;
   align-content: flex-end;
-  @media(max-width: 750px){
+  @media (max-width: 750px) {
     gap: 10px;
   }
-`
+`;
 
 const Button = styled.button`
   border-radius: 16px;
@@ -121,4 +118,4 @@ const Button = styled.button`
   height: 50px;
   font-size: 16px;
   cursor: pointer;
-`
+`;

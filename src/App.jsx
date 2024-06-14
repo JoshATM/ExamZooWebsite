@@ -18,12 +18,6 @@ import Dashboard from "./components/pages/Dashboard";
 const loggedIn = localStorage.getItem("loggedIn");
 
 export default function App() {
-  const postgresUrl = import.meta.env.URL;
-  const postgresUser = import.meta.env.USER;
-  const postgresHost = import.meta.env.HOST;
-  const postgresPassword = import.meta.env.PASSWORD;
-  const postgresDatabase = import.meta.env.DATABASE;
-
   const router = createBrowserRouter([
     // Makes it so anything in GlobalComponents (such as the Header) is not displayed in PageNotFound
     { path: "*", element: <PageNotFound /> },
