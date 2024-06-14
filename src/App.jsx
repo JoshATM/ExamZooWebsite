@@ -1,23 +1,29 @@
 // Importing Modules
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import { Toaster } from 'react-hot-toast'
+import { Toaster } from "react-hot-toast";
 
-import GlobalComponents from "./components/GlobalComponents"
+import GlobalComponents from "./components/GlobalComponents";
 
-import Home from './components/pages/Home'
-import PageNotFound from './components/pages/PageNotFound'
-import LogIn from "./components/pages/LogIn"
-import SignUp from "./components/pages/SignUp"
-import Tickets from '../src/components/pages/Tickets'
-import CookiePolicy from '../src/components/pages/CookiePolicy'
-import Materials from '../src/components/pages/Materials'
-import Dashboard from "./components/pages/Dashboard"
+import Home from "./components/pages/Home";
+import PageNotFound from "./components/pages/PageNotFound";
+import LogIn from "./components/pages/LogIn";
+import SignUp from "./components/pages/SignUp";
+import Tickets from "../src/components/pages/Tickets";
+import CookiePolicy from "../src/components/pages/CookiePolicy";
+import Materials from "../src/components/pages/Materials";
+import Dashboard from "./components/pages/Dashboard";
 
 // Gets loggedIn from local storage
-const loggedIn = localStorage.getItem('loggedIn');
+const loggedIn = localStorage.getItem("loggedIn");
 
 export default function App() {
+  const postgresUrl = import.meta.env.URL;
+  const postgresUser = import.meta.env.USER;
+  const postgresHost = import.meta.env.HOST;
+  const postgresPassword = import.meta.env.PASSWORD;
+  const postgresDatabase = import.meta.env.DATABASE;
+
   const router = createBrowserRouter([
     // Makes it so anything in GlobalComponents (such as the Header) is not displayed in PageNotFound
     { path: "*", element: <PageNotFound /> },
@@ -32,11 +38,10 @@ export default function App() {
         { path: "cookie-policy", element: <CookiePolicy /> },
         { path: "materials", element: <Materials /> },
         // If the user is not Logged In then to redirect them to the Log in screen
-        { path: "dashboard", element: loggedIn ? <Dashboard/> : <LogIn/> },
-        
+        { path: "dashboard", element: loggedIn ? <Dashboard /> : <LogIn /> },
       ],
     },
-  ])
+  ]);
 
   return (
     <>
@@ -59,5 +64,5 @@ export default function App() {
         }}
       />
     </>
-  )
+  );
 }
