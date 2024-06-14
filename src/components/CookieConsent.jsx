@@ -7,7 +7,7 @@ export default function CookieConsent() {
   const navigate = useNavigate();
 
   const [ccshow, setCCShow] = useState(() => {
-    return localStorage.getItem("cookies") !== "false";
+    return localStorage.getItem("cookies") !== "true";
   });
 
   useEffect(() => {
@@ -17,12 +17,12 @@ export default function CookieConsent() {
   }, []);
 
   const Declined = () => {
-    localStorage.setItem("cookies", false);
+    localStorage.setItem("cookies", "false");
     setCCShow(false);
   };
 
   const Agreed = () => {
-    localStorage.setItem("cookies", true);
+    localStorage.setItem("cookies", "true");
     setCCShow(false);
   };
 
