@@ -1,12 +1,12 @@
 // Importing Modules
-import express from "express"
+import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import express from "express";
 import pg from "pg";
 
 // Front-end Server Port
-const frontend = "http://localhost:5173"
+const frontend = "http://localhost:5173";
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,8 +15,7 @@ app.use(
     origin: frontend,
     credentials: true,
   })
-)
-
+);
 
 // Database Connection
 const pool = new pg.Pool({
@@ -30,7 +29,7 @@ const pool = new pg.Pool({
 // Whether or not the database has been connected to successfully
 pool.connect((err, client, done) => {
   if (err) throw err;
-  client.query('SELECT * FROM your_table', (err, res) => {
+  client.query("SELECT * FROM your_table", (err, res) => {
     done();
     if (err) {
       console.log(err.stack);
@@ -39,7 +38,6 @@ pool.connect((err, client, done) => {
     }
   });
 });
-
 
 // Server Running on Port
 const port = 5000;
@@ -60,7 +58,7 @@ const usersTable = `
 
 pool.query(usersTable, (err) => {
   if (err) throw err;
-  console.log('Users table created');
+  console.log("Users table created");
 });
 
 // Sign Up
@@ -177,7 +175,7 @@ CREATE TABLE IF NOT EXISTS ticket_bookings (
 
 pool.query(ticketBookingsTable, (err) => {
   if (err) throw err;
-  console.log('TicketBookings table created');
+  console.log("TicketBookings table created");
 });
 
 // Creates a Table for Reservations
@@ -194,5 +192,5 @@ CREATE TABLE IF NOT EXISTS hotel_bookings (
 
 pool.query(hotelBookingsTable, (err) => {
   if (err) throw err;
-  console.log('HotelBookings table created');
+  console.log("HotelBookings table created");
 });
