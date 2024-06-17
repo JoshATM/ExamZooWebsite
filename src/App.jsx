@@ -10,6 +10,7 @@ import PageNotFound from "./components/pages/PageNotFound";
 import LogIn from "./components/pages/LogIn";
 import SignUp from "./components/pages/SignUp";
 import Tickets from "../src/components/pages/Tickets";
+import Hotel from "./components/pages/Hotel";
 import CookiePolicy from "../src/components/pages/CookiePolicy";
 import Materials from "../src/components/pages/Materials";
 import Dashboard from "./components/pages/Dashboard";
@@ -29,6 +30,7 @@ export default function App() {
         { path: "login", element: <LogIn /> },
         { path: "signup", element: <SignUp /> },
         { path: "tickets", element: <Tickets /> },
+        { path: "hotel", element: <Hotel /> },
         { path: "cookie-policy", element: <CookiePolicy /> },
         { path: "materials", element: <Materials /> },
         // If the user is not Logged In then to redirect them to the Log in screen

@@ -2,7 +2,7 @@
 import styled from "styled-components";
 import React, { useState } from "react";
 import Logo from "../assets/images/RigetZooAdventuresLogo.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Line from "./Line";
 import InvertedLine from "./InvertedLine";
 import SignOut from "./SignOut";
@@ -27,6 +27,7 @@ export default function Header() {
       />
       <LinksContainer>
         <LinkText onClick={() => navigate("/tickets")}>Tickets</LinkText>
+        <LinkText onClick={() => navigate("/hotel")}>Hotels</LinkText>
         <LinkText onClick={() => navigate("/materials")}>Materials</LinkText>
         {
           // If Logged In displays the Sign Out Button, if not then displays Login
@@ -101,6 +102,10 @@ export default function Header() {
             Tickets
           </SBLinkText>
           <InvertedLine lineTop={125 * 2 + "px"} />
+          <SBLinkText onClick={() => navigate("/hotel", toggleSidebar())}>
+            Hotels
+          </SBLinkText>
+          <InvertedLine lineTop={125 * 3 + "px"} />
           <SBLinkText onClick={() => navigate("/materials", toggleSidebar())}>
             Materials
           </SBLinkText>
