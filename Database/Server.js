@@ -2,7 +2,7 @@
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
-import pg from "pg";
+import { createConnection } from "mysql";
 
 // Front-end Server Port
 const frontend = "http://localhost:5173";
@@ -17,16 +17,16 @@ app.use(
 );
 
 // Database Connection
-const pool = new pg.Pool({
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  database: process.env.DB_NAME,
+const db = createConnection({
+  user: "root",
+  host: "localhost",
+  database: "zoo_database",
+  password: "superSecretPassword",
+  port: 5000,
 });
 
 // Whether or not the database has been connected to successfully
-pool.connect((err, client, done) => {
+db.connect((err, client, done) => {
   if (err) throw err;
   client.query("SELECT * FROM your_table", (err, res) => {
     done();
@@ -55,7 +55,7 @@ const usersTable = `
   )
 `;
 
-pool.query(usersTable, (err) => {
+db.query(usersTable, (err) => {
   if (err) throw err;
   console.log("Users table created");
 });
@@ -66,7 +66,7 @@ app.post("/register", (req, res) => {
 
   const query =
     "INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)";
-  pool.query(query, [firstname, lastname, email, password], (err) => {
+  db.query(query, [firstname, lastname, email, password], (err) => {
     if (err) {
       console.error("Error registering user: " + err.stack);
       res.status(500).send("Error registering user");
@@ -82,7 +82,7 @@ app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
   const query = "SELECT * FROM users WHERE email = $1 AND password = $2";
-  pool.query(query, [email, password], (err, results) => {
+  db.query(query, [email, password], (err, results) => {
     if (err) {
       console.error("Error logging in: " + err.stack);
       res.status(500).send("Error logging in");
@@ -102,7 +102,7 @@ app.post("/login", (req, res) => {
 app.get("/check-email/:email", (req, res) => {
   const { email } = req.params;
   const query = "SELECT * FROM users WHERE email = $1";
-  pool.query(query, [email], (err, results) => {
+  db.query(query, [email], (err, results) => {
     if (err) {
       console.error("Error checking email: " + err.stack);
       res.status(500).send("Error checking email");
@@ -117,9 +117,9 @@ app.get("/check-email/:email", (req, res) => {
 // Incomplete Dashboard
 
 // Would get the users name and email if finished
-app.get("/users", (req, res) => {
+app.get("/users", (_, res) => {
   const query = "SELECT * FROM users";
-  pool.query(query, (err, results) => {
+  db.query(query, (err, results) => {
     if (err) {
       console.error("Error fetching users: " + err.stack);
       res.status(500).send("Error fetching users");
@@ -131,9 +131,9 @@ app.get("/users", (req, res) => {
 });
 
 // Would get the users reservations if finished
-app.get("/reservations", (req, res) => {
+app.get("/reservations", (_, res) => {
   const query = "SELECT * FROM hotel_reservations";
-  pool.query(query, (err, results) => {
+  db.query(query, (err, results) => {
     if (err) {
       console.error("Error fetching hotel reservations: " + err.stack);
       res.status(500).send("Error fetching hotel reservations");
@@ -145,9 +145,9 @@ app.get("/reservations", (req, res) => {
 });
 
 // Would get the users bookings if finished
-app.get("/bookings", (req, res) => {
+app.get("/bookings", (_, res) => {
   const query = "SELECT * FROM bookings";
-  pool.query(query, (err, results) => {
+  db.query(query, (err, results) => {
     if (err) {
       console.error("Error fetching bookings: " + err.stack);
       res.status(500).send("Error fetching bookings");
@@ -172,7 +172,7 @@ CREATE TABLE IF NOT EXISTS ticket_bookings (
 )
 `;
 
-pool.query(ticketBookingsTable, (err) => {
+db.query(ticketBookingsTable, (err) => {
   if (err) throw err;
   console.log("TicketBookings table created");
 });
@@ -189,7 +189,7 @@ CREATE TABLE IF NOT EXISTS hotel_bookings (
 )
 `;
 
-pool.query(hotelBookingsTable, (err) => {
+db.query(hotelBookingsTable, (err) => {
   if (err) throw err;
   console.log("HotelBookings table created");
 });
