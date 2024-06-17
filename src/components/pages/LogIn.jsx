@@ -38,6 +38,8 @@ export default function LogIn() {
         window.location.reload();
       } else if (response.status === 401) {
         toast.error("Invalid Email or Password!");
+      } else if (response.status === 500) {
+        toast.error("No User Found!");
       } else {
         console.error("Error logging in");
       }

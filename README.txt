@@ -62,10 +62,15 @@ Step 8:
 Now open the my.ini by pressing config in the MySQL section and where it says
 password     = your_password
 change it to
-password = Turkish-snooze-tumbrel-reagent-aster-photo-hecatomb-impure-sedate
+password = superSecretPassword
 and then save it and close the file
 Next run the command to set the XAMPP terminal to allow you access using the password:
-mysqladmin.exe -u root password Turkish-snooze-tumbrel-reagent-aster-photo-hecatomb-impure-sedate
+mysqladmin.exe -u root password superSecretPassword
+Go to C:\xampp\phpMyAdmin\config.inc.php and change the line 21 (for me anyway) from
+$cfg['Servers'][$i]['password'] = '';
+to
+$cfg['Servers'][$i]['password'] = 'superSecretPassword';
+
 
 Step 9:
 When Apache and MySQL are running then open go onto your browser and enter in the search bar

@@ -22,38 +22,35 @@ const db = createConnection({
   host: "localhost",
   database: "zoo_database",
   password: "superSecretPassword",
-  port: 5000,
 });
 
 // Whether or not the database has been connected to successfully
-db.connect((err, client, done) => {
+db.connect((err) => {
   if (err) throw err;
-  client.query("SELECT * FROM your_table", (err, res) => {
-    done();
+  db.query("SELECT * FROM your_table", (err, res) => {
     if (err) {
       console.log(err.stack);
     } else {
-      console.log(res.rows);
+      console.log(res);
     }
   });
-});
 
-// Server Running on Port
-const port = 5000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  db.query(usersTable, (err) => {
+    if (err) throw err;
+    console.log("Users table created");
+  });
 });
 
 // Table for Users
 const usersTable = `
-  CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255),
-    last_name VARCHAR(255),
-    email VARCHAR(255),
-    password VARCHAR(255)
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
+  email VARCHAR(255),
+  password VARCHAR(255)
   )
-`;
+  `;
 
 db.query(usersTable, (err) => {
   if (err) throw err;
@@ -69,11 +66,11 @@ app.post("/register", (req, res) => {
   db.query(query, [firstname, lastname, email, password], (err) => {
     if (err) {
       console.error("Error registering user: " + err.stack);
-      res.status(500).send("Error registering user");
+      res.status(500).json({ error: "Error registering user" });
       return;
     }
 
-    res.status(200).send("User registered successfully");
+    res.status(200).json({ message: "User registered successfully" });
   });
 });
 
@@ -101,95 +98,101 @@ app.post("/login", (req, res) => {
 // Sign Up email validation
 app.get("/check-email/:email", (req, res) => {
   const { email } = req.params;
-  const query = "SELECT * FROM users WHERE email = $1";
+  const query = "SELECT * FROM users WHERE email = ?";
   db.query(query, [email], (err, results) => {
     if (err) {
       console.error("Error checking email: " + err.stack);
-      res.status(500).send("Error checking email");
+      res.status(500).json({ error: "Error checking email" });
       return;
     }
 
-    const emailExists = results.rows.length > 0;
-    res.json(emailExists);
+    const emailExists = results.length > 0;
+    res.json({ exists: emailExists }); // Ensure the response is an object with a boolean property
   });
 });
 
-// Incomplete Dashboard
-
-// Would get the users name and email if finished
-app.get("/users", (_, res) => {
-  const query = "SELECT * FROM users";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching users: " + err.stack);
-      res.status(500).send("Error fetching users");
-      return;
-    }
-
-    res.json(results.rows);
-  });
+// Server Running on Port
+const port = 5000;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
 
-// Would get the users reservations if finished
-app.get("/reservations", (_, res) => {
-  const query = "SELECT * FROM hotel_reservations";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching hotel reservations: " + err.stack);
-      res.status(500).send("Error fetching hotel reservations");
-      return;
-    }
+// // Incomplete Dashboard
 
-    res.json(results.rows);
-  });
-});
+// // Would get the users name and email if finished
+// app.get("/users", (_, res) => {
+//   const query = "SELECT * FROM users";
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       console.error("Error fetching users: " + err.stack);
+//       res.status(500).send("Error fetching users");
+//       return;
+//     }
 
-// Would get the users bookings if finished
-app.get("/bookings", (_, res) => {
-  const query = "SELECT * FROM bookings";
-  db.query(query, (err, results) => {
-    if (err) {
-      console.error("Error fetching bookings: " + err.stack);
-      res.status(500).send("Error fetching bookings");
-      return;
-    }
+//     res.json(results.rows);
+//   });
+// });
 
-    res.json(results.rows);
-  });
-});
+// // Would get the users reservations if finished
+// app.get("/reservations", (_, res) => {
+//   const query = "SELECT * FROM hotel_reservations";
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       console.error("Error fetching hotel reservations: " + err.stack);
+//       res.status(500).send("Error fetching hotel reservations");
+//       return;
+//     }
 
-// Creates a Table for Bookings
-const ticketBookingsTable = `
-CREATE TABLE IF NOT EXISTS ticket_bookings (
-  id SERIAL PRIMARY KEY,
-  user_id INT,
-  time_purchased TIMESTAMP,
-  adults INT,
-  seniors INT,
-  children INT,
-  price DECIMAL(10, 2),
-  FOREIGN KEY (user_id) REFERENCES users(id)
-)
-`;
+//     res.json(results.rows);
+//   });
+// });
 
-db.query(ticketBookingsTable, (err) => {
-  if (err) throw err;
-  console.log("TicketBookings table created");
-});
+// // Would get the users bookings if finished
+// app.get("/bookings", (_, res) => {
+//   const query = "SELECT * FROM bookings";
+//   db.query(query, (err, results) => {
+//     if (err) {
+//       console.error("Error fetching bookings: " + err.stack);
+//       res.status(500).send("Error fetching bookings");
+//       return;
+//     }
 
-// Creates a Table for Reservations
-const hotelBookingsTable = `
-CREATE TABLE IF NOT EXISTS hotel_bookings (
-  id SERIAL PRIMARY KEY,
-  user_id INT,
-  rooms INT,
-  num_people INT,
-  price DECIMAL(10, 2),
-  FOREIGN KEY (user_id) REFERENCES users(id)
-)
-`;
+//     res.json(results.rows);
+//   });
+// });
 
-db.query(hotelBookingsTable, (err) => {
-  if (err) throw err;
-  console.log("HotelBookings table created");
-});
+// // Creates a Table for Bookings
+// const ticketBookingsTable = `
+// CREATE TABLE IF NOT EXISTS ticket_bookings (
+//   id SERIAL PRIMARY KEY,
+//   user_id INT,
+//   time_purchased TIMESTAMP,
+//   adults INT,
+//   seniors INT,
+//   children INT,
+//   price DECIMAL(10, 2),
+//   FOREIGN KEY (user_id) REFERENCES users(id)
+// )
+// `;
+
+// db.query(ticketBookingsTable, (err) => {
+//   if (err) throw err;
+//   console.log("TicketBookings table created");
+// });
+
+// // Creates a Table for Reservations
+// const hotelBookingsTable = `
+// CREATE TABLE IF NOT EXISTS hotel_bookings (
+//   id SERIAL PRIMARY KEY,
+//   user_id INT,
+//   rooms INT,
+//   num_people INT,
+//   price DECIMAL(10, 2),
+//   FOREIGN KEY (user_id) REFERENCES users(id)
+// )
+// `;
+
+// db.query(hotelBookingsTable, (err) => {
+//   if (err) throw err;
+//   console.log("HotelBookings table created");
+// });

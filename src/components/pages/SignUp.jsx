@@ -30,7 +30,6 @@ export default function SignUp() {
       toast("Please make your password longer than 8 characters!");
     } else {
       try {
-        // Email validation to check if it already exists
         const emailAlreadyExists = await fetch(
           `http://localhost:5000/check-email/${email}`,
           {
@@ -43,7 +42,10 @@ export default function SignUp() {
 
         const ifEmailExists = await emailAlreadyExists.json();
 
-        if (ifEmailExists) {
+        // Handle the response
+        if (ifEmailExists.error) {
+          toast.error(ifEmailExists.error);
+        } else if (ifEmailExists.exists) {
           toast.error("This email is already in use. \n You can Log in Below.");
         } else {
           const response = await fetch("http://localhost:5000/register", {
@@ -68,7 +70,7 @@ export default function SignUp() {
           }
         }
       } catch (error) {
-        console.error("Error registering user: " + error.message);
+        console.error("Error checking email: " + error.message);
       }
     }
   };
